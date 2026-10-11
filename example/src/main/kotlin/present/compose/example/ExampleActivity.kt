@@ -4,11 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import present.compose.PresentHost
 import present.compose.PresentStack
 
@@ -23,9 +19,21 @@ class ExampleActivity : ComponentActivity() {
                     content = { Home() },
                     presented = { screen ->
                         when (screen) {
-                            Screen.A -> PresentedPage("Screen A", Screen.B)
-                            Screen.B -> PresentedPage("Screen B", Screen.C)
-                            Screen.C -> Text("Screen C", modifier = Modifier.padding(24.dp))
+                            Screen.A -> PresentedPage(
+                                title = "Screen A",
+                                detail = "Opened from Home. This page reads the same stack and can present Screen B.",
+                                next = Screen.B,
+                            )
+                            Screen.B -> PresentedPage(
+                                title = "Screen B",
+                                detail = "Opened above the previous layer. Dismiss removes only this layer.",
+                                next = Screen.C,
+                            )
+                            Screen.C -> PresentedPage(
+                                title = "Screen C",
+                                detail = "Opened as a popup anchored to the Home button, or as an overlay with a dim scrim.",
+                                next = null,
+                            )
                         }
                     },
                 )

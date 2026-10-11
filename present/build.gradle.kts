@@ -11,6 +11,7 @@ android {
 
     defaultConfig {
         minSdk = 26
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -39,7 +40,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 groupId = "present.compose"
                 artifactId = "present"
-                version = "1.0.0"
+                version = "1.0.1"
                 from(components["release"])
             }
         }
@@ -53,4 +54,9 @@ dependencies {
     api("androidx.compose.ui:ui:1.7.6")
 
     testImplementation("junit:junit:4.13.2")
+
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
 }

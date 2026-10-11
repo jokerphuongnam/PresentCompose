@@ -4,17 +4,17 @@ PresentCompose is the Android coordinator for one flow. Many screens share one `
 
 Use it when a screen needs to open a dialog, a bottom sheet, another screen, a popup, or an overlay without each caller owning its own `Dialog` or `ModalBottomSheet`. It does not replace Navigation Compose, and it is not ComposeAtoms.
 
-Current release: `1.0.0`.
+Current release: `1.0.1`.
 
 ## Install
 
 ```kotlin
 dependencies {
-    implementation("present.compose:present:1.0.0")
+    implementation("present.compose:present:1.0.1")
 }
 ```
 
-The artifact is `present.compose:present:1.0.0`. `minSdk` is 26. Compose runtime, foundation, UI, and Material 3 come in through the library.
+The artifact is `present.compose:present:1.0.1`. `minSdk` is 26. Compose runtime, foundation, UI, and Material 3 come in through the library.
 
 This repository publishes to Maven Local, not Maven Central:
 
@@ -36,8 +36,9 @@ PresentHost(
     content = { Home() },
     presented = { screen ->
         when (screen) {
-            Screen.A -> ScreenA()
-            Screen.B -> ScreenB()
+            Screen.A -> PresentedPage("Screen A", next = Screen.B)
+            Screen.B -> PresentedPage("Screen B", next = Screen.C)
+            Screen.C -> PresentedPage("Screen C", next = null)
         }
     },
 )
@@ -47,7 +48,15 @@ PresentHost(
 
 ```kotlin
 val stack = presentStack<Screen>()
+stack.dialog(Screen.A)
+stack.bottomSheet(Screen.A)
+stack.screen(Screen.B)
+stack.overlay(Screen.C)
+stack.popup(Screen.C, anchor)
+stack.dismiss()
 ```
+
+The `:example` app is that flow. Home has one button for each style. Popup uses the button's `boundsInRoot()` as the anchor. Screen A and Screen B can open the next screen as a dialog, bottom sheet, screen, or overlay, then dismiss only their own layer. Screen C explains that it arrived as a popup or an overlay.
 
 If that call runs outside `PresentHost`, it throws `No PresentHost above this composable.`
 
@@ -110,8 +119,15 @@ The stack does not hold the composable. When the last entry is gone, only `conte
 | `PopupPresentation.kt` | Anchored popup |
 | `OverlayPresentation.kt` | Dimmed overlay |
 
+## Tests
+
+Unit tests are `./gradlew :present:test`. They cover one stack for every style, `dismiss`, `dismissFrom`, and the flags stored on dialog, popup, and overlay.
+
+UI tests are `./gradlew :present:connectedDebugAndroidTest` on a device or emulator. They open a dialog, a bottom sheet, a screen, a popup, and an overlay, and they open a second layer from a presented screen.
+
 ## Versions
 
 | Version | What it is |
 |---|---|
 | 1.0.0 | First release. One stack for dialog, bottom sheet, screen, popup, and overlay |
+| 1.0.1 | Unit tests, UI tests, and an example with one button for every style |

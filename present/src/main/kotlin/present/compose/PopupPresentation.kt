@@ -1,13 +1,15 @@
 package present.compose
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.zIndex
 import kotlin.math.roundToInt
 
 @Composable
@@ -21,7 +23,7 @@ internal fun PopupPresentation(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .clickable(onClick = onDismiss),
+                    .pointerInput(onDismiss) { detectTapGestures { onDismiss() } },
             )
         }
         Box(
@@ -32,7 +34,8 @@ internal fun PopupPresentation(
                         entry.anchor.bottom.roundToInt(),
                     )
                 }
-                .wrapContentSize(),
+                .wrapContentSize()
+                .zIndex(1f),
         ) { content() }
     }
 }

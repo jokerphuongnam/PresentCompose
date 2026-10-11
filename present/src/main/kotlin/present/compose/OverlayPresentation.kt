@@ -1,12 +1,14 @@
 package present.compose
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.zIndex
 
 @Composable
 internal fun OverlayPresentation(
@@ -20,9 +22,9 @@ internal fun OverlayPresentation(
                 Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.3f))
-                    .clickable(onClick = onDismiss),
+                    .pointerInput(onDismiss) { detectTapGestures { onDismiss() } },
             )
         }
-        content()
+        Box(Modifier.zIndex(1f)) { content() }
     }
 }
